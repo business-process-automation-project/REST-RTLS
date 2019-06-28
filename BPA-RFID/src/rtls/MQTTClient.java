@@ -9,6 +9,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.json.JSONObject;
 import com.google.gson.*;
+import org.json.simple.parser.*;
+import org.json.simple.*;
+import jdk.nashorn.internal.parser.JSONParser;
 
 public class MQTTClient implements MqttCallback {
 
@@ -24,6 +27,8 @@ public class MQTTClient implements MqttCallback {
 	 */
 	@Override
 	public void connectionLost(Throwable t) {
+        System.out.println(t.getMessage());
+       t.printStackTrace();
 		System.out.println("Connection lost!");
 		// code to reconnect to the broker would go here if desired
 	}
@@ -72,7 +77,7 @@ public class MQTTClient implements MqttCallback {
 			myClient.connect(connOpt);
 			
 		} catch (MqttException e) {
-			e.printStackTrace();
+		e.printStackTrace();	
 			System.exit(-1);
 		}
 
@@ -94,7 +99,7 @@ public class MQTTClient implements MqttCallback {
 		}
 
 		// disconnect
-		try
+		/*try
 
 		{
 			// wait to ensure subscribed messages are delivered
@@ -102,7 +107,7 @@ public class MQTTClient implements MqttCallback {
 			myClient.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} */
 	}
 
 	@Override
@@ -146,32 +151,40 @@ public class MQTTClient implements MqttCallback {
 			
 			
 		}
-		else if(Meldung.contains("username")) {
+		else if(Meldung.contains("name")) {
 			
-			Gson g = new Gson();
-			JSONObject playerstats = new JSONObject(g.toJson(Meldung));
-			String username = playerstats.getString("username");
-			String age = playerstats.getString("userage");
-			JSONObject payloadJSON2 = new JSONObject()
-								.put("id",4)
-								.put("type","TEXT")
-								.put("data",username);
-			
-			JSONObject payloadJSON3 = new JSONObject()
-					.put("id",3)
-					.put("type","TEXT")
-					.put("data",age);
-			String payload = "[" + payloadJSON3.toString() + "," + payloadJSON2.toString() + "]";
-			String content = rtls.SetUser.Test(payload);
-			
-			System.out.println(content);
+		
 			
 			
+			JSONObject obj = new JSONObject(Meldung);
+			String name =  obj.getString("name");
+			String alter = obj.getString("age");
+	
+		    
+
+				
+				
+				JSONObject payloadJSON2 = new JSONObject()
+						.put("id",4)
+						.put("type","TEXT")
+						.put("data",name);
+	
+	JSONObject payloadJSON3 = new JSONObject()
+			.put("id",3)
+			.put("type","TEXT")
+			.put("data",alter);
+	String payload = "[" + payloadJSON2.toString() + "," + payloadJSON3.toString() + "]";
+	String content = rtls.SetUser.Set(payload);
+	
+	
 			JSONObject payloadReturnJSON = new JSONObject()
 					.put("badgeId", content)
-					.put("name", username)
-					.put("age", age);
+					.put("name", name)
+					.put("age", alter);
 			String payloadReturn = payloadReturnJSON.toString();
+			
+			
+			
 			String topicB = "SetUser";
 			MqttMessage Antwort = new MqttMessage((payloadReturn).getBytes());
 			

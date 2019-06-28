@@ -47,5 +47,12 @@ public class getposition {
 
 }
 	
+	public static String Feld17 (String[] args) throws KeyManagementException, NoSuchAlgorithmException, JSONException, IOException {
+		JSONObject obj = new JSONObject(OAuth.retrieveToken(rtls.OAuthConfig.getAuthUrl(), rtls.OAuthConfig.getClientId(), rtls.OAuthConfig.getUsername(), rtls.OAuthConfig.getPassword()));
+		String Token = obj.getString("access_token");
+		String surl = ("https://192.168.130.2:8083/rest/geofencing/areas/17/devices?access_token=" + Token);			 
+return(geturl.getURl(surl));
+}
+	
 
 }
