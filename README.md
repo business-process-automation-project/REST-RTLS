@@ -1,9 +1,10 @@
 # REST-RTLS
 Dokumentation
 
-How to use
 Zum starten der Anwendung MQTTClient ausführen.
+
 MQTT Broker IP in Zeile 21 festlegen.
+
 Z.86 Topics festlegen auf die gehört wird. // Standart ist Lights und SendPlayerData
 
 Wenn eine Nachricht empfangen wird, wird auf Answer1 2 und 3 gehört.
